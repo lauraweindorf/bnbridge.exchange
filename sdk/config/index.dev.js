@@ -1,24 +1,24 @@
+// noinspection DuplicatedCode
 const config = {
-  host: "localhost",
-  database: "bnbridge",
+  host: "172.18.135.115",
+  database: "postgres",
   user: "postgres",
-  password: "123123123",
+  password: "postgres",
 
   //Binance
-  api: "https://testnet-dex.binance.org/",
-  filePath: "c:/opt/fantom/fantom-binance/cli/node-binary/cli/testnet/0.5.8.1/windows/",
-  fileName: "tbnbcli.exe",
-  chainID: "Binance-Chain-Nile",
-  nodeData: "data-seed-pre-2-s1.binance.org:80",
-  nodeHTTPS: "https://seed-pre-s3.binance.org:443",
+  api: "https://mainnet-node.chainofsecrets.org",
+  filePath: ".",
+  fileName: "enigmacli",
+  chainID: "enigma-1",
+  nodeData: "http://n3.scrt.cashmaney.com:26657",
+  nodeHTTPS: "http://n3.scrt.cashmaney.com:26657",
   keyPrepend: "TEST_",
   list_proposal_deposit: "200000000000",
-  prefix: 'tbnb',
+  prefix: 'enigma',
   network: 'testnet',
 
   //Ethereum
-  provider: 'https://ropsten.infura.io/v3/2b1dbb61817f4ae6ac90d9b41662993b',
-
+  provider: 'https://kovan.infura.io/v3/fb658f0feb274180a5b6556c77dd1b67',
 
   erc20ABI: [
   	{
@@ -255,6 +255,6 @@ const config = {
   		"type": "function"
   	}
   ]
-}
+};
 
-module.exports = config
+module.exports = config;

@@ -7,13 +7,13 @@
 
 */
 
-const db = require('./helpers/db.js').db
-const config = require('./config')
-const bnb = require('./helpers/bnb.js')
+const db = require('./helpers/db.js').db;
+const config = require('./config');
+const bnb = require('./helpers/bnb.js');
 
-const FANTOM_UUID = ""
+const FANTOM_UUID = "";
 
-getToken()
+getToken();
 
 function getToken() {
   db.oneOrNone("select * from tokens where uuid = $1;", [FANTOM_UUID])
@@ -32,7 +32,7 @@ function getAllTransactions(token) {
 }
 
 function error(err) {
-  console.log(err)
+  console.log(err);
   return
 }
 
@@ -52,23 +52,23 @@ function callTransfer(token, swaps) {
       return error('Key not found: ', key)
     }
 
-    let swapUuids = []
+    let swapUuids = [];
 
-    let sum = 0
+    let sum = 0;
 
     const toObj = swaps.reduce((accumulator, currentValue) => {
 
-      swapUuids.push(currentValue.uuid)
-      sum = parseFloat(sum) + (parseFloat(currentValue.amount))
+      swapUuids.push(currentValue.uuid);
+      sum = parseFloat(sum) + (parseFloat(currentValue.amount));
 
       const thisSwap = accumulator.filter((swap) => {
         return swap.to === currentValue.bnb_address
-      })
+      });
 
-      const amount = (parseFloat(currentValue.amount)).toFixed(8)
+      const amount = (parseFloat(currentValue.amount)).toFixed(8);
 
       if(thisSwap.length > 0) {
-        thisSwap[0].coins[0].amount = (parseFloat(thisSwap[0].coins[0].amount) + parseFloat(amount)).toFixed(8)
+        thisSwap[0].coins[0].amount = (parseFloat(thisSwap[0].coins[0].amount) + parseFloat(amount)).toFixed(8);
 
         return accumulator
       } else {
@@ -80,24 +80,24 @@ function callTransfer(token, swaps) {
               amount: amount
             }
           ]
-        })
+        });
         return accumulator
       }
-    }, [])
+    }, []);
 
-    console.log(JSON.stringify(toObj, null, 2))
+    console.log(JSON.stringify(toObj, null, 2));
 
-    console.log("TOTAL SENDING: ", sum)
+    console.log("TOTAL SENDING: ", sum);
 
     bnb.multiSend(key.seed_phrase, toObj, 'BNBridge Swap', (err, sendResult) => {
       if(err) {
         return error('Swap failed!:', err)
       }
 
-      console.log(sendResult)
+      console.log(sendResult);
 
       if(sendResult && sendResult.result && sendResult.result.length > 0) {
-        const transactionHash = sendResult.result[0].hash
+        const transactionHash = sendResult.result[0].hash;
 
         updateSuccess(swapUuids, transactionHash)
 
@@ -109,8 +109,8 @@ function callTransfer(token, swaps) {
 }
 
 function updateSuccess(swapUuids, transactionHash) {
-  const swapString = "'" + swapUuids.join("', '") + "'"
-  console.log(swapString)
+  const swapString = "'" + swapUuids.join("', '") + "'";
+  console.log(swapString);
 
   db.none("update swaps set transfer_transaction_hash = $1, processed = true where uuid in ("+swapString+");", [transactionHash])
   .then(() => {

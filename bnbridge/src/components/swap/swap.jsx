@@ -30,9 +30,9 @@ import {
 } from '../../constants'
 
 import Store from "../../stores";
-const dispatcher = Store.dispatcher
-const emitter = Store.emitter
-const store = Store.store
+const dispatcher = Store.dispatcher;
+const emitter = Store.emitter;
+const store = Store.store;
 
 const styles = theme => ({
   root: {
@@ -136,8 +136,8 @@ class Swap extends Component {
     page: 0,
     token: '',
     tokenError: false,
-    bnbReceiveAddress: '',
-    bnbReceiveAddressError: false,
+    scrtReceiveAddress: '',
+    scrtReceiveAddressError: false,
     ethReceiveAddress: '',
     ethReceiveAddressError: false,
     tokens: [],
@@ -166,7 +166,7 @@ class Swap extends Component {
   };
 
   tokensUpdated = () => {
-    const tokens = store.getStore('tokens')
+    const tokens = store.getStore('tokens');
 
     this.setState({
       tokens: tokens
@@ -182,7 +182,7 @@ class Swap extends Component {
   };
 
   error = (err) => {
-    this.props.showError(err)
+    this.props.showError(err);
     this.setState({ loading: false })
   };
 
@@ -209,18 +209,18 @@ class Swap extends Component {
     const {
       token,
       swapDirection,
-      bnbReceiveAddress,
+      scrtReceiveAddress,
       ethReceiveAddress
-    } = this.state
+    } = this.state;
 
     const content =  {
       token_uuid: token,
       direction: swapDirection,
-      bnb_address: bnbReceiveAddress,
+      bnb_address: scrtReceiveAddress,
       eth_address: ethReceiveAddress,
-    }
+    };
 
-    dispatcher.dispatch({ type: SWAP_TOKEN, content })
+    dispatcher.dispatch({ type: SWAP_TOKEN, content });
 
     this.setState({ loading: true })
   };
@@ -230,14 +230,14 @@ class Swap extends Component {
       clientUuid,
       selectedToken,
       swapDirection
-    } = this.state
+    } = this.state;
 
     const content = {
       uuid: clientUuid,
       direction: swapDirection,
       token_uuid: selectedToken.uuid
-    }
-    dispatcher.dispatch({type: FINALIZE_SWAP_TOKEN, content })
+    };
+    dispatcher.dispatch({type: FINALIZE_SWAP_TOKEN, content });
 
     this.setState({ loading: true })
   };
@@ -246,32 +246,32 @@ class Swap extends Component {
 
     this.setState({
       tokenError: false,
-      bnbReceiveAddressError: false,
+      scrtReceiveAddressError: false,
       ethReceiveAddressError: false,
-    })
+    });
 
     const {
       token,
       swapDirection,
-      bnbReceiveAddress,
+      scrtReceiveAddress,
       ethReceiveAddress,
-    } = this.state
+    } = this.state;
 
-    let error = false
+    let error = false;
 
     if(!token || token === '') {
-      this.setState({ tokenError: true })
+      this.setState({ tokenError: true });
       error = true
     }
 
     if(swapDirection === 'EthereumToBinance') {
-      if(!bnbReceiveAddress || bnbReceiveAddress === '') {
-        this.setState({ bnbReceiveAddressError: true })
+      if(!scrtReceiveAddress || scrtReceiveAddress === '') {
+        this.setState({ scrtReceiveAddressError: true });
         error = true
       }
     } else {
       if(!ethReceiveAddress || ethReceiveAddress === '') {
-        this.setState({ ethReceiveAddressError: true })
+        this.setState({ ethReceiveAddressError: true });
         error = true
       }
     }
@@ -287,10 +287,10 @@ class Swap extends Component {
         }
         break;
       case 1:
-        this.callFinalizeSwapToken()
+        this.callFinalizeSwapToken();
         break;
       case 2:
-        this.resetPage()
+        this.resetPage();
         break;
       default:
 
@@ -301,24 +301,24 @@ class Swap extends Component {
     const {
       swapDirection,
       selectedToken
-    } = this.state
+    } = this.state;
 
-    let direction = swapDirection==='EthereumToBinance'?'BinanceToEthereum':'EthereumToBinance'
-
-    if(selectedToken){
-      if(!selectedToken.eth_to_bnb_enabled && direction === 'EthereumToBinance') {
-        direction = 'BinanceToEthereum'
-      }
-
-      if(!selectedToken.bnb_to_eth_enabled && direction === 'BinanceToEthereum') {
-        direction = 'EthereumToBinance'
-      }
-    }
+    let direction = swapDirection==='EthereumToBinance'?'BinanceToEthereum':'EthereumToBinance';
+    //
+    // if(selectedToken){
+    //   if(!selectedToken.eth_to_bnb_enabled && direction === 'EthereumToBinance') {
+    //     direction = 'BinanceToEthereum'
+    //   }
+    //
+    //   if(!selectedToken.bnb_to_eth_enabled && direction === 'BinanceToEthereum') {
+    //     direction = 'EthereumToBinance'
+    //   }
+    // }
 
     this.setState({
       swapDirection: direction,
       ethReceiveAddress: '',
-      bnbReceiveAddress: '',
+      scrtReceiveAddress: '',
       ethBalances: null,
       bnbBalances: null
     })
@@ -329,8 +329,8 @@ class Swap extends Component {
       page: 0,
       token: '',
       tokenError: false,
-      bnbReceiveAddress: '',
-      bnbReceiveAddressError: false,
+      scrtReceiveAddress: '',
+      scrtReceiveAddressError: false,
       ethReceiveAddress: '',
       ethReceiveAddressError: false,
       selectedToken: null,
@@ -346,7 +346,7 @@ class Swap extends Component {
   onHashClick = (hash) => {
     const {
       swapDirection
-    } = this.state
+    } = this.state;
 
     if(swapDirection === 'EthereumToBinance') {
       window.open(config.etherscanURL+hash, "_blank")
@@ -360,45 +360,45 @@ class Swap extends Component {
     const {
       tokens,
       swapDirection,
-      bnbReceiveAddress,
+      scrtReceiveAddress,
       ethReceiveAddress,
-    } = this.state
+    } = this.state;
 
     let theToken = tokens.filter((tok) => {
       return tok.uuid === value
-    })
+    });
 
     if(theToken.length < 1) {
-      this.setState({ token: value, selectedToken: null })
+      this.setState({ token: value, selectedToken: null });
       return false;
     }
 
-    this.setState({ token: value, selectedToken: theToken[0] })
+    this.setState({ token: value, selectedToken: theToken[0] });
 
     if(!theToken[0].eth_to_bnb_enabled && !theToken[0].bnb_to_eth_enabled) {
-      this.setState({ swapDirection: null })
+      this.setState({ swapDirection: null });
       return false
     }
 
-    let direction = swapDirection
+    let direction = swapDirection;
 
     if(!theToken[0].eth_to_bnb_enabled && swapDirection === 'EthereumToBinance') {
-      direction = 'BinanceToEthereum'
+      direction = 'BinanceToEthereum';
       this.setState({ swapDirection: direction })
     }
 
     if(!theToken[0].bnb_to_eth_enabled && swapDirection === 'BinanceToEthereum') {
-      direction = 'EthereumToBinance'
+      direction = 'EthereumToBinance';
       this.setState({ swapDirection: direction })
     }
 
     if(direction === 'EthereumToBinance') {
-      if(theToken.length > 0  && bnbReceiveAddress && bnbReceiveAddress !== "" && bnbReceiveAddress.length === Config.bnbAddressLength) {
+      if(theToken.length > 0  && scrtReceiveAddress && scrtReceiveAddress !== "" && scrtReceiveAddress.length === Config.bnbAddressLength) {
         const content = {
-          bnb_address: bnbReceiveAddress,
+          bnb_address: scrtReceiveAddress,
           token_uuid: theToken[0].uuid
-        }
-        dispatcher.dispatch({type: GET_BNB_BALANCES, content })
+        };
+        dispatcher.dispatch({type: GET_BNB_BALANCES, content });
         this.setState({ loading: true })
       }
       this.setState({ bnbBalances: null })
@@ -407,8 +407,8 @@ class Swap extends Component {
         const content = {
           eth_address: ethReceiveAddress,
           token_uuid: theToken[0].uuid
-        }
-        dispatcher.dispatch({type: GET_ETH_BALANCES, content })
+        };
+        dispatcher.dispatch({type: GET_ETH_BALANCES, content });
         this.setState({ loading: true })
       }
       this.setState({ ethBalances: null })
@@ -416,22 +416,22 @@ class Swap extends Component {
   };
 
   onChange = (event) => {
-    let val = []
-    val[event.target.id] = event.target.value
-    this.setState(val)
+    let val = [];
+    val[event.target.id] = event.target.value;
+    this.setState(val);
 
-    if(event.target.id === 'bnbReceiveAddress') {
+    if(event.target.id === 'scrtReceiveAddress') {
 
       const {
         selectedToken,
-      } = this.state
+      } = this.state;
 
       if(selectedToken  && event.target.value && event.target.value !== "" && event.target.value.length === Config.bnbAddressLength) {
         const content = {
           bnb_address: event.target.value,
           token_uuid: selectedToken.uuid
-        }
-        dispatcher.dispatch({type: GET_BNB_BALANCES, content })
+        };
+        dispatcher.dispatch({type: GET_BNB_BALANCES, content });
         this.setState({ loading: true })
       }
       this.setState({ bnbBalances: null })
@@ -441,14 +441,14 @@ class Swap extends Component {
 
       const {
         selectedToken,
-      } = this.state
+      } = this.state;
 
       if(selectedToken  && event.target.value && event.target.value !== "" && event.target.value.length === Config.erc20addressLength) {
         const content = {
           eth_address: event.target.value,
           token_uuid: selectedToken.uuid
-        }
-        dispatcher.dispatch({type: GET_ETH_BALANCES, content })
+        };
+        dispatcher.dispatch({type: GET_ETH_BALANCES, content });
         this.setState({ loading: true })
       }
       this.setState({ ethBalances: null })
@@ -479,8 +479,8 @@ class Swap extends Component {
   renderPage0 = () => {
 
     const {
-      bnbReceiveAddress,
-      bnbReceiveAddressError,
+      scrtReceiveAddress,
+      scrtReceiveAddressError,
       ethReceiveAddress,
       ethReceiveAddressError,
       loading,
@@ -488,13 +488,13 @@ class Swap extends Component {
       ethBalances,
       selectedToken,
       swapDirection
-    } = this.state
+    } = this.state;
 
     const {
       onIssue,
       onCreateAccount,
       classes
-    } = this.props
+    } = this.props;
 
     return (
       <React.Fragment>
@@ -511,12 +511,12 @@ class Swap extends Component {
             swapDirection === "EthereumToBinance" ?
               <React.Fragment>
                 <Input
-                  id='bnbReceiveAddress'
+                  id='scrtReceiveAddress'
                   fullWidth={ true }
-                  label="BNB Receive Address"
-                  placeholder="eg: bnb1mmxvnhkyqrvd2dpskvsgl8lmft4tnrcs97apr3"
-                  value={ bnbReceiveAddress }
-                  error={ bnbReceiveAddressError }
+                  label="SCRT Receive Address"
+                  placeholder="eg: enigma1mmxvnhkyqrvd2dpskvsgl8lmft4tnrcs97apr3"
+                  value={ scrtReceiveAddress }
+                  error={ scrtReceiveAddressError }
                   onChange={ this.onChange }
                   disabled={ loading }
                 />
@@ -568,11 +568,11 @@ class Swap extends Component {
       ethDepositAddress,
       bnbDepositAddress,
       swapDirection
-    } = this.state
+    } = this.state;
 
     const {
       classes
-    } = this.props
+    } = this.props;
 
     return (
       <React.Fragment>
@@ -610,7 +610,7 @@ class Swap extends Component {
 
     const {
       classes
-    } = this.props
+    } = this.props;
 
     return (
       <React.Fragment>
@@ -632,22 +632,22 @@ class Swap extends Component {
     const {
       transactions,
       selectedToken,
-      bnbReceiveAddress,
+      scrtReceiveAddress,
       ethReceiveAddress,
       swapDirection
-    } = this.state
+    } = this.state;
 
     const {
       classes
-    } = this.props
+    } = this.props;
 
     const reducer = (accumulator, currentValue) => accumulator + parseFloat(currentValue.amount);
-    const totalAmount = transactions.reduce(reducer, 0)
+    const totalAmount = transactions.reduce(reducer, 0);
 
     return (
       <React.Fragment>
         <Typography className={ classes.instructions }>
-          You will receive another <b>{totalAmount} { swapDirection === 'EthereumToBinance' ? selectedToken.unique_symbol : (selectedToken.symbol+'-ERC20') }</b> in your address <b>{ swapDirection === 'EthereumToBinance' ? bnbReceiveAddress : ethReceiveAddress }</b>
+          You will receive another {totalAmount} <b> {selectedToken.symbol} </b> in your address <b>{ scrtReceiveAddress }</b>
         </Typography>
       </React.Fragment>
     )
@@ -658,17 +658,17 @@ class Swap extends Component {
       transactions,
       selectedToken,
       swapDirection
-    } = this.state
+    } = this.state;
 
     const {
       classes
-    } = this.props
+    } = this.props;
 
     return transactions.map((transaction) => {
       return (
         <React.Fragment>
           <Typography className={ classes.hash } onClick={ (event) => { this.onHashClick(transaction.deposit_transaction_hash); } }>
-            <b>{transaction.amount} { swapDirection === 'EthereumToBinance' ? (selectedToken.symbol+'-ERC20') : selectedToken.unique_symbol }</b> from <b>{ swapDirection === 'EthereumToBinance' ? transaction.eth_address : transaction.bnb_address }</b>
+            <b>{transaction.amount} ENG </b> from <b>{ transaction.eth_address }</b>
           </Typography>
         </React.Fragment>)
     })
@@ -678,19 +678,19 @@ class Swap extends Component {
 
     const {
       classes
-    } = this.props
+    } = this.props;
 
     const {
       swapDirection,
       selectedToken
-    } = this.state
+    } = this.state;
 
-    let first = 'Binance'
-    let second = 'Ethereum'
+    let first = 'Binance';
+    let second = 'Ethereum';
 
     if(swapDirection === 'EthereumToBinance') {
-      first = 'Ethereum'
-      second = 'Binance'
+      first = 'Enigma';
+      second = 'SCRT'
     }
 
     if(selectedToken && !selectedToken.eth_to_bnb_enabled && !selectedToken.bnb_to_eth_enabled) {
@@ -706,7 +706,7 @@ class Swap extends Component {
     return (
       <React.Fragment>
         <Label label={ 'Swap direction' } overrideStyle={ { marginTop: '12px' } } />
-        <Grid item xs={ 5 } onClick={ this.onSwapDirectionClick } className={ classes.gridClick }>
+        <Grid item xs={ 5 } className={ classes.gridClick }>
           <div className={ classes.icon }>
             <img
               alt=""
@@ -715,13 +715,13 @@ class Swap extends Component {
             />
           </div>
           <div className={ classes.iconName }>
-            <Typography  variant='h5'>{ first ==='Binance' ? 'BEP2' : 'ERC20' }</Typography>
+            <Typography  variant='h5'>{ first ==='SCRT' ? 'SCRT' : 'ERC20' }</Typography>
           </div>
         </Grid>
-        <Grid item xs={ 2 } onClick={ this.onSwapDirectionClick } className={ classes.gridClick }>
+        <Grid item xs={ 2 } className={ classes.gridClick }>
           <SwapIcon className={ classes.swapDirection } />
         </Grid>
-        <Grid item xs={ 5 } align='left' onClick={ this.onSwapDirectionClick } className={ classes.gridClick }>
+        <Grid item xs={ 5 } align='left' className={ classes.gridClick }>
           <div className={ classes.icon }>
             <img
               alt=""
@@ -730,7 +730,7 @@ class Swap extends Component {
             />
           </div>
           <div className={ classes.iconName }>
-            <Typography  variant='h5'>{ second ==='Binance' ? 'BEP2' : 'ERC20' }</Typography>
+            <Typography  variant='h5'>{ second ==='SCRT' ? 'SCRT' : 'ERC20' }</Typography>
           </div>
         </Grid>
       </React.Fragment>
@@ -740,13 +740,13 @@ class Swap extends Component {
   render() {
     const {
       classes
-    } = this.props
+    } = this.props;
 
     const {
       page,
       loading,
       selectedToken
-    } = this.state
+    } = this.state;
 
     return (
       <Grid container className={ classes.root }>

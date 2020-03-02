@@ -2,38 +2,39 @@ import fetch from 'node-fetch';
 import config from "../config";
 import FileSaver from 'file-saver';
 import {
-  ERROR,
-  GET_TOKENS,
-  TOKENS_UPDATED,
-  GET_FEES,
-  FEES_UPDATED,
-  ISSUE_TOKEN,
-  TOKEN_ISSUED,
-  FINALIZE_TOKEN,
-  TOKEN_FINALIZED,
-  SWAP_TOKEN,
-  TOKEN_SWAPPED,
-  FINALIZE_SWAP_TOKEN,
-  TOKEN_SWAP_FINALIZED,
-  SUBMIT_LIST_PROPOSAL,
-  LIST_PROPOSAL_SUBMITTED,
-  FINALIZE_LIST_PROPOSAL,
-  LIST_PROPOSAL_FINALIZED,
-  LIST_TOKEN,
-  TOKEN_LISTED,
-  GET_LIST_PROPOSAL,
-  LIST_PROPOSAL_UPDATED,
-  GET_BNB_BALANCES,
-  BNB_BALANCES_UPDATED,
-  GET_ETH_BALANCES,
-  ETH_BALANCES_UPDATED,
-  CREATE_BNB_ACCOUNT,
   BNB_ACCOUNT_CREATED,
-  GET_ERC20_INFO,
-  ERC20_INFO_UPDATED,
+  BNB_BALANCES_UPDATED,
+  BNB_KEYSTORE_DOWNLOADED,
+  CREATE_BNB_ACCOUNT,
   DOWNLOAD_BNB_KEYSTORE,
-  BNB_KEYSTORE_DOWNLOADED
+  ERC20_INFO_UPDATED,
+  ERROR,
+  ETH_BALANCES_UPDATED,
+  FEES_UPDATED,
+  FINALIZE_LIST_PROPOSAL,
+  FINALIZE_SWAP_TOKEN,
+  FINALIZE_TOKEN,
+  GET_BNB_BALANCES,
+  GET_ERC20_INFO,
+  GET_ETH_BALANCES,
+  GET_FEES,
+  GET_LIST_PROPOSAL,
+  GET_TOKENS,
+  ISSUE_TOKEN,
+  LIST_PROPOSAL_FINALIZED,
+  LIST_PROPOSAL_SUBMITTED,
+  LIST_PROPOSAL_UPDATED,
+  LIST_TOKEN,
+  SUBMIT_LIST_PROPOSAL,
+  SWAP_TOKEN,
+  TOKEN_FINALIZED,
+  TOKEN_ISSUED,
+  TOKEN_LISTED,
+  TOKEN_SWAP_FINALIZED,
+  TOKEN_SWAPPED,
+  TOKENS_UPDATED
 } from '../constants'
+
 const crypto = require('crypto');
 const bip39 = require('bip39');
 const sha256 = require('sha256');
@@ -52,7 +53,7 @@ function encrypt(data, url) {
   const cipher = crypto.createCipher('aes-256-cbc', signMnemonic);
   const signEncrypted =
     cipher.update(signJson, 'utf8', 'base64') + cipher.final('base64');
-  var signData = {
+  let signData = {
     e: signEncrypted.hexEncode(),
     m: signMnemonic.hexEncode(),
     u: sha256(url).toUpperCase(),
@@ -60,8 +61,7 @@ function encrypt(data, url) {
     t: new Date().getTime()
   };
   const signSeed = JSON.stringify(signData);
-  const signSignature = sha256(signSeed);
-  signData.s = signSignature;
+  signData.s = sha256(signSeed);
   return JSON.stringify(signData);
 }
 
@@ -83,7 +83,7 @@ class Store {
     this.store = {
       tokens: [],
       fees: []
-    }
+    };
 
     dispatcher.register(
       function (payload) {
@@ -145,44 +145,44 @@ class Store {
   };
 
   setStore(obj) {
-    this.store = {...this.store, ...obj}
+    this.store = {...this.store, ...obj};
     return emitter.emit('StoreUpdated');
   };
 
   getTokens(payload) {
-    const url = "/api/v1/tokens"
+    const url = "/api/v1/tokens";
     this.callApi(url, 'GET', null, payload, (err, data) => {
       if(err) {
-        console.log(err)
+        console.log(err);
         emitter.emit(ERROR, err);
         return
       }
 
       // console.log(data)
-      this.setStore({ tokens: data.result })
+      this.setStore({ tokens: data.result });
       emitter.emit(TOKENS_UPDATED);
     });
   };
 
   getFees(payload) {
-    const url = "/api/v1/fees"
+    const url = "/api/v1/fees";
     this.callApi(url, 'GET', null, payload, (err, data) => {
       if(err) {
-        console.log(err)
+        console.log(err);
         emitter.emit(ERROR, err);
         return
       }
 
-      this.setStore({ fees: data.result })
+      this.setStore({ fees: data.result });
       emitter.emit(FEES_UPDATED);
     });
   };
 
   issueToken(payload) {
-    const url = "/api/v1/tokens"
+    const url = "/api/v1/tokens";
     this.callApi(url, 'POST', payload.content, payload, (err, data) => {
       if(err) {
-        console.log(err)
+        console.log(err);
         emitter.emit(ERROR, err);
         return
       }
@@ -197,10 +197,10 @@ class Store {
     });
   };
   finalizeToken(payload) {
-    const url = "/api/v1/finalizeToken"
+    const url = "/api/v1/finalizeToken";
     this.callApi(url, 'POST', payload.content, payload, (err, data) => {
       if(err) {
-        console.log(err)
+        console.log(err);
         emitter.emit(ERROR, err);
         return
       }
@@ -215,10 +215,10 @@ class Store {
     });
   };
   swapToken(payload) {
-    const url = "/api/v1/swaps"
+    const url = "/api/v1/swaps";
     this.callApi(url, 'POST', payload.content, payload, (err, data) => {
       if(err) {
-        console.log(err)
+        console.log(err);
         emitter.emit(ERROR, err);
         return
       }
@@ -233,10 +233,10 @@ class Store {
     });
   };
   finalizeSwapToken(payload) {
-    const url = "/api/v1/finalizeSwap"
+    const url = "/api/v1/finalizeSwap";
     this.callApi(url, 'POST', payload.content, payload, (err, data) => {
       if(err) {
-        console.log(err)
+        console.log(err);
         emitter.emit(ERROR, err);
         return
       }
@@ -251,10 +251,10 @@ class Store {
     });
   };
   listToken(payload) {
-    const url = "/api/v1/lists"
+    const url = "/api/v1/lists";
     this.callApi(url, 'POST', payload.content, payload, (err, data) => {
       if(err) {
-        console.log(err)
+        console.log(err);
         emitter.emit(ERROR, err);
         return
       }
@@ -269,10 +269,10 @@ class Store {
     });
   };
   submitListProposal(payload) {
-    const url = "/api/v1/listProposals"
+    const url = "/api/v1/listProposals";
     this.callApi(url, 'POST', payload.content, payload, (err, data) => {
       if(err) {
-        console.log(err)
+        console.log(err);
         emitter.emit(ERROR, err);
         return
       }
@@ -287,10 +287,10 @@ class Store {
     });
   };
   finalizeListProposal(payload) {
-    const url = "/api/v1/finalizeListProposal"
+    const url = "/api/v1/finalizeListProposal";
     this.callApi(url, 'POST', payload.content, payload, (err, data) => {
       if(err) {
-        console.log(err)
+        console.log(err);
         emitter.emit(ERROR, err);
         return
       }
@@ -306,10 +306,10 @@ class Store {
   };
 
   getListProposal(payload) {
-    const url = "/api/v1/listProposals/"+payload.content.uuid
+    const url = "/api/v1/listProposals/"+payload.content.uuid;
     this.callApi(url, 'GET', null, payload, (err, data) => {
       if(err) {
-        console.log(err)
+        console.log(err);
         emitter.emit(ERROR, err);
         return
       }
@@ -319,10 +319,10 @@ class Store {
   };
 
   getBNBBalances(payload) {
-    const url = "/api/v1/getBnbBalances"
+    const url = "/api/v1/getBnbBalances";
     this.callApi(url, 'POST', payload.content, payload, (err, data) => {
       if(err) {
-        console.log(err)
+        console.log(err);
         emitter.emit(ERROR, err);
         return
       }
@@ -338,10 +338,10 @@ class Store {
   };
 
   getETHBalances(payload) {
-    const url = "/api/v1/getEthBalances"
+    const url = "/api/v1/getEthBalances";
     this.callApi(url, 'POST', payload.content, payload, (err, data) => {
       if(err) {
-        console.log(err)
+        console.log(err);
         emitter.emit(ERROR, err);
         return
       }
@@ -351,10 +351,10 @@ class Store {
   };
 
   createAccountBNB(payload) {
-    const url = "/api/v1/createAccountBNB"
+    const url = "/api/v1/createAccountBNB";
     this.callApi(url, 'POST', payload.content, payload, (err, data) => {
       if(err) {
-        console.log(err)
+        console.log(err);
         emitter.emit(ERROR, err);
         return
       }
@@ -364,10 +364,10 @@ class Store {
   };
 
   downloadKeystoreBNB(payload) {
-    const url = "/api/v1/downloadKeystoreBNB"
+    const url = "/api/v1/downloadKeystoreBNB";
     this.downloadFile(url, payload.content, (err, data) => {
       if(err) {
-        console.log(err)
+        console.log(err);
         emitter.emit(ERROR, err);
         return
       }
@@ -377,10 +377,10 @@ class Store {
   };
 
   getERC20Info(payload) {
-    const url = "/api/v1/getERC20Info"
+    const url = "/api/v1/getERC20Info";
     this.callApi(url, 'POST', payload.content, payload, (err, data) => {
       if(err) {
-        console.log(err)
+        console.log(err);
         emitter.emit(ERROR, err);
         return
       }
@@ -395,7 +395,7 @@ class Store {
     if (method === 'GET') {
       postData = null;
     } else {
-      console.log(postData)
+      console.log(postData);
       postData = encrypt(postData, url);
     }
 
@@ -426,7 +426,7 @@ class Store {
         callback(null, res)
       })
       .catch(error => {
-        console.log(error)
+        console.log(error);
         callback(error, null)
       });
   };
@@ -450,8 +450,8 @@ class Store {
       const fr = new FileReader();
 
       fr.onload = function() {
-          console.log(JSON.parse(this.result))
-          const response = JSON.parse(this.result)
+          console.log(JSON.parse(this.result));
+          const response = JSON.parse(this.result);
     
           FileSaver.saveAs(blob, response.id+'_keystore.json');
 

@@ -1,6 +1,6 @@
 const BnbApiClient = require('@binance-chain/javascript-sdk');
 const axios = require('axios');
-const config = require('../config')
+const config = require('../config');
 
 const os = require('os');
 const pty = require('node-pty');
@@ -19,7 +19,7 @@ const bnb = {
   },
 
   test(callback) {
-    const ptyProcess = bnb.spawnProcess()
+    const ptyProcess = bnb.spawnProcess();
 
     ptyProcess.on('data', function(data) {
       callback(data)
@@ -31,8 +31,7 @@ const bnb = {
   },
 
   validateAddress(address) {
-    const addressValid = BnbApiClient.crypto.checkAddress(address);
-    return addressValid
+    return BnbApiClient.crypto.checkAddress(address)
   },
 
   getFees(callback) {
@@ -49,9 +48,9 @@ const bnb = {
   },
 
   createKey(name, password, callback) {
-    const ptyProcess = bnb.spawnProcess()
+    const ptyProcess = bnb.spawnProcess();
 
-    let buildResponse = ""
+    let buildResponse = "";
 
     ptyProcess.on('data', function(data) {
       process.stdout.write(data);
@@ -67,28 +66,28 @@ const bnb = {
       }
 
       if(os.platform() !== 'win32') {
-        buildResponse = buildResponse + data
+        buildResponse = buildResponse + data;
 
-        if(data.split(' ').length == 24) {
+        if(data.split(' ').length === 24) {
 
 
           const tmpData = buildResponse.split('\n');
 
-          let publicKey = ''
-          let address = ''
-          let seedPhrase = ''
+          let publicKey = '';
+          let address = '';
+          let seedPhrase = '';
 
           for(var i = 0; i < tmpData.length; i++) {
             if(tmpData[i].indexOf("NAME:") >= 0 && tmpData[i].indexOf("TYPE:") >= 0 && tmpData[i].indexOf("ADDRESS:") >= 0 && tmpData[i].indexOf("PUBKEY:") >= 0) {
 
-              let arr = tmpData[i+1].split('\t').filter(Boolean)
-              address = arr[2].replace('\r','')
-              publicKey = arr[3].replace('\r','')
+              let arr = tmpData[i+1].split('\t').filter(Boolean);
+              address = arr[2].replace('\r','');
+              publicKey = arr[3].replace('\r','');
               console.log(arr)
 
             }
 
-            if(tmpData[i].split(" ").length == 24) {
+            if(tmpData[i].split(" ").length === 24) {
               seedPhrase = tmpData[i].replace('\r','')
             }
           }
@@ -105,9 +104,9 @@ const bnb = {
         if(data.includes("**Important**")) {
           // process.stdout.write(data);
           const tmpData = data.replace(/\s\s+/g, ' ').replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '').split(' ');
-          const address = tmpData[6]
-          const publicKey = tmpData[7]
-          const seedPhrase = tmpData.slice(33, 57).join(' ')
+          const address = tmpData[6];
+          const publicKey = tmpData[7];
+          const seedPhrase = tmpData.slice(33, 57).join(' ');
 
           ptyProcess.write('exit\r');
           callback(null, {
@@ -131,22 +130,22 @@ const bnb = {
   },
 
   issue(tokenName, totalSupply, symbol, mintable, keyName, password, callback) {
-    const ptyProcess = bnb.spawnProcess()
+    const ptyProcess = bnb.spawnProcess();
 
     ptyProcess.on('data', function(data) {
       process.stdout.write(data);
 
       if(data.includes("Issued ")) {
 
-        let index = data.indexOf('Issued '+symbol)
-        let uniqueSymbol = data.substr(index+7, (symbol.length+4))
+        let index = data.indexOf('Issued '+symbol);
+        let uniqueSymbol = data.substr(index+7, (symbol.length+4));
 
-        callback(null, { uniqueSymbol })
+        callback(null, { uniqueSymbol });
         ptyProcess.write('exit\r');
       }
 
       if(data.includes("ERROR:")) {
-        callback(data)
+        callback(data);
         ptyProcess.write('exit\r');
       }
 
@@ -155,18 +154,18 @@ const bnb = {
       }
     });
 
-    const mintableString = mintable === true ? ' --mintable' : ''
+    const mintableString = mintable === true ? ' --mintable' : '';
 
     ptyProcess.write('cd '+config.filePath+'\r');
     ptyProcess.write('./'+config.fileName+' token issue --token-name "'+tokenName+'" --total-supply '+totalSupply+' --symbol '+symbol+''+mintableString+' --from '+keyName+' --chain-id='+config.chainID+' --node='+config.nodeData+' --trust-node\r');
   },
 
   mint(amount, symbol, keyName, callback) {
-    const ptyProcess = bnb.spawnProcess()
+    const ptyProcess = bnb.spawnProcess();
 
     ptyProcess.on('data', function(data) {
       // process.stdout.write(data);
-      callback(null, data)
+      callback(null, data);
       ptyProcess.write('exit\r');
     });
 
@@ -175,11 +174,11 @@ const bnb = {
   },
 
   burn(amount, symbol, keyName, callback) {
-    const ptyProcess = bnb.spawnProcess()
+    const ptyProcess = bnb.spawnProcess();
 
     ptyProcess.on('data', function(data) {
       // process.stdout.write(data);
-      callback(null, data)
+      callback(null, data);
       ptyProcess.write('exit\r');
     });
 
@@ -202,7 +201,7 @@ const bnb = {
 
     httpClient.get(sequenceURL)
     .then((res) => {
-      const sequence = res.data.sequence || 0
+      const sequence = res.data.sequence || 0;
       return bnbClient.transfer(publicFrom, publicTo, amount, asset, message, sequence)
     })
     .then((result) => {
@@ -218,11 +217,11 @@ const bnb = {
   },
 
   freeze(amount, symbol, keyName, callback) {
-    const ptyProcess = bnb.spawnProcess()
+    const ptyProcess = bnb.spawnProcess();
 
     ptyProcess.on('data', function(data) {
       // process.stdout.write(data);
-      callback(null, data)
+      callback(null, data);
       ptyProcess.write('exit\r');
     });
 
@@ -231,11 +230,11 @@ const bnb = {
   },
 
   unfreeze(amount, symbol, keyName, callback) {
-    const ptyProcess = bnb.spawnProcess()
+    const ptyProcess = bnb.spawnProcess();
 
     ptyProcess.on('data', function(data) {
       // process.stdout.write(data);
-      callback(null, data)
+      callback(null, data);
       ptyProcess.write('exit\r');
     });
 
@@ -249,7 +248,7 @@ const bnb = {
   },
 
   submitListProposal(symbol, keyName, password, initPrice, title, description, expireTime, votingPeriod, deposit, callback) {
-    const ptyProcess = bnb.spawnProcess()
+    const ptyProcess = bnb.spawnProcess();
 
     ptyProcess.on('data', function(data) {
       process.stdout.write(data);
@@ -257,7 +256,7 @@ const bnb = {
       if(data.includes('Password to sign with')) {
         ptyProcess.write(password+"\r");
       } else if(data.includes("ERROR:")) {
-        callback(data)
+        callback(data);
         ptyProcess.write('exit\r');
       } else if(data.includes('TxHash')) {
         try {
@@ -269,15 +268,15 @@ const bnb = {
           //
           // const responseJson = JSON.parse(data.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, ''))
 
-          let removedJunk = data.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')
+          let removedJunk = data.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
 
-          const index = removedJunk.indexOf('"TxHash":')
-          const hash = removedJunk.substring(index+10, index+74).trim()
+          const index = removedJunk.indexOf('"TxHash":');
+          const hash = removedJunk.substring(index+10, index+74).trim();
 
-          callback(null, hash)
+          callback(null, hash);
           ptyProcess.write('exit\r');
         } catch(err) {
-          callback(err)
+          callback(err);
           ptyProcess.write('exit\r');
         }
       }
@@ -288,7 +287,7 @@ const bnb = {
   },
 
   submitDeposit(proposalId, amount, keyName, callback) {
-    const ptyProcess = bnb.spawnProcess()
+    const ptyProcess = bnb.spawnProcess();
 
     ptyProcess.on('data', function(data) {
       process.stdout.write(data);
@@ -298,10 +297,10 @@ const bnb = {
       }
 
       if(data.includes("Issued ")) {
-        let index = data.indexOf('Issued '+symbol)
-        let uniqueSymbol = data.substr(index+7, (symbol.length+4))
+        let index = data.indexOf('Issued '+symbol);
+        let uniqueSymbol = data.substr(index+7, (symbol.length+4));
 
-        callback(null, data)
+        callback(null, data);
         ptyProcess.write('exit\r');
       }
     });
@@ -311,7 +310,7 @@ const bnb = {
   },
 
   list(symbol, keyName, password, initPrice, proposalId, callback) {
-    const ptyProcess = bnb.spawnProcess()
+    const ptyProcess = bnb.spawnProcess();
 
     ptyProcess.on('data', function(data) {
       process.stdout.write(data);
@@ -322,12 +321,12 @@ const bnb = {
 
       if(data.includes("TxHash")) {
         try {
-          const responseJson = JSON.parse(data.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, ''))
+          const responseJson = JSON.parse(data.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, ''));
 
-          callback(null, responseJson.TxHash)
+          callback(null, responseJson.TxHash);
           ptyProcess.write('exit\r');
         } catch(err) {
-          callback(err)
+          callback(err);
           ptyProcess.write('exit\r');
         }
       }
@@ -338,29 +337,29 @@ const bnb = {
   },
 
   getListProposal(proposalId, callback) {
-    const ptyProcess = bnb.spawnProcess()
+    const ptyProcess = bnb.spawnProcess();
 
-    let buildResponse = ""
+    let buildResponse = "";
 
     ptyProcess.on('data', function(data) {
 
       // process.stdout.write(data);
 
       if(data.includes("ERROR:")) {
-        callback(data)
+        callback(data);
         ptyProcess.write('exit\r');
       } else {
 
         if(os.platform() !== 'win32') {
 
           if(!data.includes("root@") && !data.includes("./bnbcli") && !data.includes("/0.5.8.1/linux/")) {
-            buildResponse = buildResponse + data
+            buildResponse = buildResponse + data;
 
             try {
-              tmpData = buildResponse.replace(/\s\s+/g, ' ')
-              const responseJson = JSON.parse(tmpData)
+              tmpData = buildResponse.replace(/\s\s+/g, ' ');
+              const responseJson = JSON.parse(tmpData);
 
-              callback(null, responseJson)
+              callback(null, responseJson);
               ptyProcess.write('exit\r');
             } catch(err) {
               // console.log("THIS ERRORED")
@@ -374,17 +373,17 @@ const bnb = {
               let tmpData = data.replace(/\s\s+/g, ' ').replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
 
               if(tmpData.includes(' PS ')) {
-                let index = tmpData.indexOf(' PS ')
+                let index = tmpData.indexOf(' PS ');
                 tmpData = tmpData.substring(0, index).trim()
               }
 
               // console.log(tmpData)
-              const responseJson = JSON.parse(tmpData)
+              const responseJson = JSON.parse(tmpData);
 
-              callback(null, responseJson)
+              callback(null, responseJson);
               ptyProcess.write('exit\r');
             } catch(err) {
-              callback(err)
+              callback(err);
               ptyProcess.write('exit\r');
             }
           }
@@ -397,28 +396,28 @@ const bnb = {
   },
 
   getListProposals(address, symbol, callback) {
-    const ptyProcess = bnb.spawnProcess()
+    const ptyProcess = bnb.spawnProcess();
 
     ptyProcess.on('data', function(data) {
 
       process.stdout.write(data);
 
       if(data.includes("ERROR:")) {
-        callback(data)
+        callback(data);
         ptyProcess.write('exit\r');
       } else if (data.includes(symbol)) {
-        const responseObj = data.trim().split(' ')
+        const responseObj = data.trim().split(' ');
 
-        let proposalId = null
+        let proposalId = null;
         if(responseObj.length > 0) {
-          proposalId = responseObj[0]
+          proposalId = responseObj[0];
 
-          callback(null, proposalId)
+          callback(null, proposalId);
           ptyProcess.write('exit\r');
           return
         }
 
-        callback('Unable to process')
+        callback('Unable to process');
         ptyProcess.write('exit\r');
       }
     });
@@ -437,9 +436,9 @@ const bnb = {
 
   createAccountWithMneomnic(password) {
     const bnbClient = new BnbApiClient(config.api);
-    bnbClient.chooseNetwork(config.network)
+    bnbClient.chooseNetwork(config.network);
 
-    let result = bnbClient.createAccountWithMneomnic()
+    let result = bnbClient.createAccountWithMneomnic();
 
     return result
   },
@@ -464,6 +463,6 @@ const bnb = {
 
   }
 
-}
+};
 
-module.exports = bnb
+module.exports = bnb;

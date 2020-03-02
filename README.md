@@ -2,7 +2,7 @@
 
 ### Features:
 - [x] Issue a new token on the Binance network.
-- [x] Swap a token from ERC20 to BEP2.
+- [x] Swap a token from ERC20 to SCRT.
 - [x] List newly issued token on Binance DEX.
 - [x] Create a new BNB account.
 

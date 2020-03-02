@@ -6,8 +6,8 @@ CREATE TABLE "public"."bnb_accounts" (
   "address" varchar(64),
   "key_name" varchar(64),
   "password" text,
-  "created" timestamp(6),
-  "encr_key" text
+  "encr_key" text,
+  "created" timestamp(6)
 )
 WITH (OIDS=FALSE);
 
@@ -29,18 +29,18 @@ CREATE TABLE "public"."client_accounts_eth" (
 )
 WITH (OIDS=FALSE);
 
-DROP TABLE "public"."client_bnb_accounts";
-CREATE TABLE "public"."client_bnb_accounts" (
-  "uuid" char(36) NOT NULL,
-  "public_key" varchar(128),
-  "seed_phrase" text,
-  "address" varchar(64),
-  "key_name" varchar(64),
-  "password" text,
-  "created" timestamp(6),
-  "encr_key" text
-)
-WITH (OIDS=FALSE);
+-- DROP TABLE "public"."client_bnb_accounts";
+-- CREATE TABLE "public"."client_bnb_accounts" (
+--   "uuid" char(36) NOT NULL,
+--   "public_key" varchar(128),
+--   "seed_phrase" text,
+--   "address" varchar(64),
+--   "key_name" varchar(64),
+--   "password" text,
+--   "created" timestamp(6),
+--   "encr_key" text
+-- )
+-- WITH (OIDS=FALSE);
 
 DROP TABLE "public"."client_eth_accounts";
 CREATE TABLE "public"."client_eth_accounts" (
@@ -62,24 +62,24 @@ CREATE TABLE "public"."eth_accounts" (
 )
 WITH (OIDS=FALSE);
 
-DROP TABLE "public"."list_proposals";
-CREATE TABLE "public"."list_proposals" (
-  "uuid" char(36) NOT NULL,
-  "token_uuid" char(36),
-  "unique_symbol" varchar(32),
-  "title" varchar(128),
-  "description" varchar(128),
-  "initial_price" varchar(32),
-  "expiry_time" int8,
-  "voting_period" int8,
-  "submitted" bool,
-  "transaction_hash" varchar(64),
-  "proposal_id" int8,
-  "processed" bool,
-  "voting_status" varchar(32),
-  "created" timestamp(6)
-)
-WITH (OIDS=FALSE);
+-- DROP TABLE "public"."list_proposals";
+-- CREATE TABLE "public"."list_proposals" (
+--   "uuid" char(36) NOT NULL,
+--   "token_uuid" char(36),
+--   "unique_symbol" varchar(32),
+--   "title" varchar(128),
+--   "description" varchar(128),
+--   "initial_price" varchar(32),
+--   "expiry_time" int8,
+--   "voting_period" int8,
+--   "submitted" bool,
+--   "transaction_hash" varchar(64),
+--   "proposal_id" int8,
+--   "processed" bool,
+--   "voting_status" varchar(32),
+--   "created" timestamp(6)
+-- )
+-- WITH (OIDS=FALSE);
 
 DROP TABLE "public"."swaps";
 CREATE TABLE "public"."swaps" (
@@ -117,7 +117,7 @@ CREATE TABLE "public"."tokens" (
   "fee_per_swap" varchar(32),
   "process_date" timestamp(6),
   "bnb_to_eth_enabled" boolean,
-  "eth_to_bnb_enabled" boolean,
+  "eth_to_bnb_enabled" boolean
 )
 WITH (OIDS=FALSE);
 
@@ -125,15 +125,15 @@ ALTER TABLE "public"."bnb_accounts" ADD PRIMARY KEY ("uuid");
 
 ALTER TABLE "public"."client_accounts_bnb" ADD PRIMARY KEY ("uuid");
 
-ALTER TABLE "public"."client_accounts_eth" ADD PRIMARY KEY ("uuid");
-
-ALTER TABLE "public"."client_bnb_accounts" ADD PRIMARY KEY ("uuid");
+-- ALTER TABLE "public"."client_accounts_eth" ADD PRIMARY KEY ("uuid");
+--
+-- ALTER TABLE "public"."client_bnb_accounts" ADD PRIMARY KEY ("uuid");
 
 ALTER TABLE "public"."client_eth_accounts" ADD PRIMARY KEY ("uuid");
 
 ALTER TABLE "public"."eth_accounts" ADD PRIMARY KEY ("uuid");
 
-ALTER TABLE "public"."list_proposals" ADD PRIMARY KEY ("uuid");
+-- ALTER TABLE "public"."list_proposals" ADD PRIMARY KEY ("uuid");
 
 ALTER TABLE "public"."swaps" ADD PRIMARY KEY ("uuid");
 

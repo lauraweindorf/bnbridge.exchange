@@ -11,16 +11,14 @@ import {
   FEES_UPDATED
 } from '../../constants'
 
-import Issue from "../issue";
-import List from "../list";
 import Swap from "../swap";
 import ErrorSnackbar from '../errorSnackbar';
 import CreateAccount from '../createAccount';
 
 import Store from "../../stores";
-const dispatcher = Store.dispatcher
-const emitter = Store.emitter
-const store = Store.store
+const dispatcher = Store.dispatcher;
+const emitter = Store.emitter;
+const store = Store.store;
 
 const styles = theme => ({
   root: {
@@ -37,45 +35,36 @@ class Controller extends Component {
     tabValue: 0,
     issueOpen: false,
     createOpen: false,
-    issueFee: 0,
     error: '',
     errorOpen: false
   };
 
-  componentWillMount() {
-    emitter.on(FEES_UPDATED, this.feesUpdated);
-    dispatcher.dispatch({type: GET_FEES, content: {} })
-  };
+  // componentWillMount() {
+  //   emitter.on(FEES_UPDATED, this.feesUpdated);
+  //   dispatcher.dispatch({type: GET_FEES, content: {} })
+  // };
+  //
+  // componentWillUnmount() {
+  //   emitter.removeListener(FEES_UPDATED, this.feesUpdated);
+  // };
 
-  componentWillUnmount() {
-    emitter.removeListener(FEES_UPDATED, this.feesUpdated);
-  };
-
-  feesUpdated = () => {
-    const fees = store.getStore('fees')
-
-    let issueFee = fees.filter((fee) => {
-      return fee.msg_type === 'issueMsg'
-    }).map((fee) => {
-      return fee.fee/100000000
-    })[0]
-
-    this.setState({
-      fees,
-      issueFee: issueFee
-    })
-  };
+  // feesUpdated = () => {
+  //   const fees = store.getStore('fees');
+  //
+  //   let issueFee = fees.filter((fee) => {
+  //     return fee.msg_type === 'issueMsg'
+  //   }).map((fee) => {
+  //     return fee.fee/100000000
+  //   })[0];
+  //
+  //   this.setState({
+  //     fees,
+  //     issueFee: issueFee
+  //   })
+  // };
 
   handleChange = (event, value) => {
     this.setState({ tabValue: value });
-  };
-
-  onIssue = (event) => {
-    this.setState({ issueOpen: true })
-  };
-
-  onIssueBack = (event) => {
-    this.setState({ issueOpen: false })
   };
 
   onCreateAccount = (event) => {
@@ -118,16 +107,6 @@ class Controller extends Component {
     this.setState({ errorOpen: true, error: error })
   };
 
-  renderIssue = () => {
-    const {
-      issueFee
-    } = this.state
-
-    return(
-      <Issue onBack={ this.onIssueBack }  issueFee={ issueFee } showError={ this.showError } />
-    )
-  };
-
   renderCreateAccount = () => {
     return(
       <CreateAccount onBack={ this.onCreateAccountBack }  showError={ this.showError } />
@@ -137,20 +116,15 @@ class Controller extends Component {
   renderTabs = () => {
     const { classes } = this.props;
     const {
-      tabValue,
-      issueFee
+      tabValue
     } = this.state;
 
     return (
       <React.Fragment>
         <Tabs value={tabValue} onChange={this.handleChange} className={ classes.tabs } variant="fullWidth" indicatorColor="primary" textColor="inherit">
           <Tab label="Swap" />
-          <Tab label="List" />
-          <Tab label="Issue" />
         </Tabs>
         {tabValue === 0 && <Swap onIssue={ this.onIssue } showError={ this.showError } onCreateAccount={ this.onCreateAccount } />}
-        {tabValue === 1 && <List onIssue={ this.onIssue } showError={ this.showError } />}
-        {tabValue === 2 && <Issue onBack={ this.onIssueBack }  issueFee={ issueFee } showError={ this.showError } />}
       </React.Fragment>
     )
   };

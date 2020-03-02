@@ -36,7 +36,7 @@ const eth = {
   },
 
   getTransactions(contractAddress, accountAddress, depositAddress, depositAmount, callback) {
-    let myContract = new web3.eth.Contract(config.erc20ABI, contractAddress)
+    let myContract = new web3.eth.Contract(config.erc20ABI, contractAddress);
 
     myContract.getPastEvents('Transfer', {
       fromBlock: 0,
@@ -45,9 +45,9 @@ const eth = {
     })
     .then((events) => {
       let returnEvents = events.filter((event) => {
-        if(event.returnValues._from.toUpperCase() == accountAddress.toUpperCase() && event.returnValues._to.toUpperCase() == depositAddress.toUpperCase()) {
+        if(event.returnValues._from.toUpperCase() === accountAddress.toUpperCase() && event.returnValues._to.toUpperCase() === depositAddress.toUpperCase()) {
           let amount = parseFloat(web3.utils.fromWei(event.returnValues._value._hex, 'ether'))
-          return depositAmount == amount
+          return depositAmount === amount
         }
       })
       callback(null, returnEvents)
@@ -59,11 +59,11 @@ const eth = {
   },
 
   getERC20Balance(address, contractAddress, callback) {
-    let myContract = new web3.eth.Contract(config.erc20ABI, contractAddress)
+    let myContract = new web3.eth.Contract(config.erc20ABI, contractAddress);
 
     myContract.methods.balanceOf(address).call({ from: address })
     .then((balance) => {
-      const theBalance = web3.utils.fromWei(balance.toString(), 'ether')
+      const theBalance = web3.utils.fromWei(balance.toString(), 'ether');
       callback(null, theBalance)
     })
   },
