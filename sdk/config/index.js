@@ -1,5 +1,6 @@
-import development from "./index.dev";
-import production from "./index.prod";
+const development = require("./index.dev");
+const production = require("./index.prod");
+
 const env = process.env.APP_ENV || 'development';
 
 const config = {
@@ -7,4 +8,4 @@ const config = {
     production
 };
 
-export default config[env];
+module.exports = config[env];

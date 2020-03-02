@@ -254,6 +254,6 @@ const config = {
   		"type": "function"
   	}
   ]
-}
+};
 
-module.exports = config
+module.exports = config;
